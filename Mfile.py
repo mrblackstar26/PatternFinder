@@ -9,10 +9,18 @@ def find_missing_jsp_files(jsp_list_file, code_folder, output_file):
     # Initialize a list to store JSP filenames that are missing in the code folder
     missing_files = []
 
-    # Loop through the JSP filenames and check if they exist in the code folder
+    # Loop through the JSP filenames
     for jsp_filename in jsp_filenames:
-        jsp_path = os.path.join(code_folder, jsp_filename)
-        if not os.path.isfile(jsp_path):
+        file_found = False
+
+        # Walk through all directories and subdirectories
+        for root, dirs, files in os.walk(code_folder):
+            if jsp_filename in files:
+                file_found = True
+                break
+
+        # If the file is not found, add it to the missing files list
+        if not file_found:
             missing_files.append(jsp_filename)
 
     # Save the missing filenames to the output file
@@ -25,7 +33,7 @@ def find_missing_jsp_files(jsp_list_file, code_folder, output_file):
 
 if __name__ == "__main__":
     # Set up the argument parser
-    parser = argparse.ArgumentParser(description="Find missing JSP files in the code folder")
+    parser = argparse.ArgumentParser(description="Find missing JSP files in the code folder and subfolders")
     parser.add_argument('jsp_list_file', help="Path to the text file containing the list of JSP filenames")
     parser.add_argument('code_folder', help="Path to the code folder containing the JSP files")
     parser.add_argument('output_file', help="Path to the output text file where the results will be saved")
