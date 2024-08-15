@@ -9,16 +9,17 @@ def check_jsp_files(jsp_list_file, code_folder, output_file):
     # Initialize a list to store JSP filenames that contain 'request.getParameter'
     found_files = []
 
-    # Loop through the JSP filenames and check for 'request.getParameter'
-    for jsp_filename in jsp_filenames:
-        jsp_path = os.path.join(code_folder, jsp_filename)
+    # Loop through each JSP file in the code folder
+    for root, dirs, files in os.walk(code_folder):
+        for file in files:
+            if file in jsp_filenames and file.endswith('.jsp'):
+                jsp_path = os.path.join(root, file)
 
-        # Check if the file exists in the specified folder
-        if os.path.isfile(jsp_path):
-            with open(jsp_path, 'r', encoding='utf-8', errors='ignore') as file:
-                content = file.read()
-                if 'request.getParameter' in content:
-                    found_files.append(jsp_filename)
+                # Check if the file exists and read its content
+                with open(jsp_path, 'r', encoding='utf-8', errors='ignore') as jsp_file:
+                    content = jsp_file.read()
+                    if 'request.getParameter' in content:
+                        found_files.append(file)
 
     # Save the results to the output file
     with open(output_file, 'w') as file:
