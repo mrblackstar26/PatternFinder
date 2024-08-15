@@ -13,7 +13,7 @@ def find_missing_jsp_files(jsp_list_file, code_folder, output_file):
     for jsp_filename in jsp_filenames:
         file_found = False
 
-        # Walk through all directories and subdirectories
+        # Walk through all directories and subdirectories to search for the file
         for root, dirs, files in os.walk(code_folder):
             if jsp_filename in files:
                 file_found = True
